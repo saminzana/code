@@ -81,90 +81,90 @@ for p in np.arange(-3.0, -0.29, 0.01):
 ################################################################################################################################################
 
 
-    bits1 = np.random.randint(2, size=(11, (int(N/11)))).astype(int)
-    
-    phi1=np.array([[1,1,0,1,1,0,1,0,1,0,1],[1,0,1,1,0,1,1,0,0,1,1],[0,1,1,1,0,0,0,1,1,1,1],[0,0,0,0,1,1,1,1,1,1,1]]).astype(int)
-    
-    paritybits1= (np.dot(phi1,bits1)%2).astype(int)
-    codebits1=np.vstack((bits1,paritybits1)).astype(int)
+bits1 = np.random.randint(2, size=(11, (int(N/11)))).astype(int)
+
+phi1=np.array([[1,1,0,1,1,0,1,0,1,0,1],[1,0,1,1,0,1,1,0,0,1,1],[0,1,1,1,0,0,0,1,1,1,1],[0,0,0,0,1,1,1,1,1,1,1]]).astype(int)
+
+paritybits1= (np.dot(phi1,bits1)%2).astype(int)
+codebits1=np.vstack((bits1,paritybits1)).astype(int)
    # print("These are the message bits:\n", bits1)
    # print("This is the parity bit matrix:\n", phi1)
-    #print("These are the parity bits:\n",paritybits1)
-    #print("These are the code bits:\n",codebits1)
+#print("These are the parity bits:\n",paritybits1)
+#print("These are the code bits:\n",codebits1)
+
+for p in np.arange(-3.0, -0.29, 0.01):
+    def bsc1(txBits,p): #simulates a binary symmetric channel with transition probability p
+        flips = np.zeros((15,(int((N/11)))),dtype='bool') #there are no flips at this point
+        x = np.random.rand(15,(int((N/11))))
+        flips[x<p] = True
+        rxBits = np.logical_xor(txBits,flips)
+        return rxBits
+    H1=(np.hstack((phi1, np.array([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]])))).astype(int)
+    #print("This is H:\n", H1)
+    recievedbits1=(bsc1(codebits1,10**p)).astype(int)
+   # print("These are the recieved bits:\n", recievedbits1)
+    syndromebits1=(np.dot(H1,recievedbits1)%2).astype(int)
+    #print ("The Syndrome Bits are:\n", syndromebits1)
+    errorbits1=(np.logical_xor(codebits1,recievedbits1)).astype(int)
+   # print("The bits in error are:\n", errorbits1)
     
-    for p in np.arange(-3.0, -0.29, 0.01):
-        def bsc1(txBits,p): #simulates a binary symmetric channel with transition probability p
-            flips = np.zeros((15,(int((N/11)))),dtype='bool') #there are no flips at this point
-            x = np.random.rand(15,(int((N/11))))
-            flips[x<p] = True
-            rxBits = np.logical_xor(txBits,flips)
-            return rxBits
-        H1=(np.hstack((phi1, np.array([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]])))).astype(int)
-        #print("This is H:\n", H1)
-        recievedbits1=(bsc1(codebits1,p)).astype(int)
-       # print("These are the recieved bits:\n", recievedbits1)
-        syndromebits1=(np.dot(H1,recievedbits1)%2).astype(int)
-        #print ("The Syndrome Bits are:\n", syndromebits1)
-        errorbits1=(np.logical_xor(codebits1,recievedbits1)).astype(int)
-       # print("The bits in error are:\n", errorbits1)
+    shape1=(15,(int(N/11)))
+    biterror1= (np.zeros(shape1)).astype(int)
+    
+    for x in range (0,int(N/11)-1):
+        if(syndromebits1[0,x]==H1[0,0] and syndromebits1[1,x]==H1[1,0] and syndromebits1[2,x]==H1[2,0] and syndromebits1[3,x]==H1[3,0]):
+            biterror1[0,x]=1
         
-        shape1=(15,(int(N/11)))
-        biterror1= (np.zeros(shape1)).astype(int)
+        elif(syndromebits1[0,x]==H1[0,1] and syndromebits1[1,x]==H1[1,1] and syndromebits1[2,x]==H1[2,1] and syndromebits1[3,x]==H1[3,0]):
+            biterror1[1,x]=1
+            
+        elif(syndromebits1[0,x]==H1[0,2] and syndromebits1[1,x]==H1[1,2] and syndromebits1[2,x]==H1[2,2] and syndromebits1[3,x]==H1[3,0]):
+            biterror1[2,x]=1
+            
+        elif(syndromebits1[0,x]==H1[0,3] and syndromebits1[1,x]==H1[1,3] and syndromebits1[2,x]==H1[2,3] and syndromebits1[3,x]==H1[3,0]):
+            biterror1[3,x]=1
+            
+        elif(syndromebits1[0,x]==H1[0,4] and syndromebits1[1,x]==H1[1,4] and syndromebits1[2,x]==H1[2,4] and syndromebits1[3,x]==H1[3,0]):
+            biterror1[4,x]=1
+            
+        elif(syndromebits1[0,x]==H1[0,5] and syndromebits1[1,x]==H1[1,5] and syndromebits1[2,x]==H1[2,5] and syndromebits1[3,x]==H1[3,0]):
+            biterror1[5,x]=1
+            
+        elif(syndromebits1[0,x]==H1[0,6] and syndromebits1[1,x]==H1[1,6] and syndromebits1[2,x]==H1[2,6] and syndromebits1[3,x]==H1[3,0]):
+            biterror1[6,x]=1
         
-        for x in range (0,int(N/11)-1):
-            if(syndromebits1[0,x]==H1[0,0] and syndromebits1[1,x]==H1[1,0] and syndromebits1[2,x]==H1[2,0] and syndromebits1[3,x]==H1[3,0]):
-                biterror1[0,x]=1
+        elif(syndromebits1[0,x]==H1[0,7] and syndromebits1[1,x]==H1[1,7] and syndromebits1[2,x]==H1[2,7] and syndromebits1[3,x]==H1[3,0]):
+            biterror1[7,x]=1
             
-            elif(syndromebits1[0,x]==H1[0,1] and syndromebits1[1,x]==H1[1,1] and syndromebits1[2,x]==H1[2,1] and syndromebits1[3,x]==H1[3,0]):
-                biterror1[1,x]=1
-                
-            elif(syndromebits1[0,x]==H1[0,2] and syndromebits1[1,x]==H1[1,2] and syndromebits1[2,x]==H1[2,2] and syndromebits1[3,x]==H1[3,0]):
-                biterror1[2,x]=1
-                
-            elif(syndromebits1[0,x]==H1[0,3] and syndromebits1[1,x]==H1[1,3] and syndromebits1[2,x]==H1[2,3] and syndromebits1[3,x]==H1[3,0]):
-                biterror1[3,x]=1
-                
-            elif(syndromebits1[0,x]==H1[0,4] and syndromebits1[1,x]==H1[1,4] and syndromebits1[2,x]==H1[2,4] and syndromebits1[3,x]==H1[3,0]):
-                biterror1[4,x]=1
-                
-            elif(syndromebits1[0,x]==H1[0,5] and syndromebits1[1,x]==H1[1,5] and syndromebits1[2,x]==H1[2,5] and syndromebits1[3,x]==H1[3,0]):
-                biterror1[5,x]=1
-                
-            elif(syndromebits1[0,x]==H1[0,6] and syndromebits1[1,x]==H1[1,6] and syndromebits1[2,x]==H1[2,6] and syndromebits1[3,x]==H1[3,0]):
-                biterror1[6,x]=1
+        elif(syndromebits1[0,x]==H1[0,8] and syndromebits1[1,x]==H1[1,8] and syndromebits1[2,x]==H1[2,8] and syndromebits1[3,x]==H1[3,0]):
+            biterror1[8,x]=1
             
-            elif(syndromebits1[0,x]==H1[0,7] and syndromebits1[1,x]==H1[1,7] and syndromebits1[2,x]==H1[2,7] and syndromebits1[3,x]==H1[3,0]):
-                biterror1[7,x]=1
-                
-            elif(syndromebits1[0,x]==H1[0,8] and syndromebits1[1,x]==H1[1,8] and syndromebits1[2,x]==H1[2,8] and syndromebits1[3,x]==H1[3,0]):
-                biterror1[8,x]=1
-                
-            elif(syndromebits1[0,x]==H1[0,9] and syndromebits1[1,x]==H1[1,9] and syndromebits1[2,x]==H1[2,9] and syndromebits1[3,x]==H1[3,0]):
-                biterror1[9,x]=1
-                
-            elif(syndromebits1[0,x]==H1[0,10] and syndromebits1[1,x]==H1[1,10] and syndromebits1[2,x]==H1[2,10] and syndromebits1[3,x]==H1[3,0]):
-                biterror1[10,x]=1
-                
-            elif(syndromebits1[0,x]==H1[0,11] and syndromebits1[1,x]==H1[1,11] and syndromebits1[2,x]==H1[2,11] and syndromebits1[3,x]==H1[3,0]):
-                biterror1[10,x]=1
-                
-            elif(syndromebits1[0,x]==H1[0,12] and syndromebits1[1,x]==H1[1,12] and syndromebits1[2,x]==H1[2,12] and syndromebits1[3,x]==H1[3,0]):
-                biterror1[12,x]=1
-                
-            elif(syndromebits1[0,x]==H1[0,13] and syndromebits1[1,x]==H1[1,13] and syndromebits1[2,x]==H1[2,13] and syndromebits1[3,x]==H1[3,0]):
-                biterror1[13,x]=1
-                
-            elif(syndromebits1[0,x]==H1[0,14] and syndromebits1[1,x]==H1[1,14] and syndromebits1[2,x]==H1[2,14] and syndromebits1[3,x]==H1[3,0]):
-                biterror1[14,x]=1
+        elif(syndromebits1[0,x]==H1[0,9] and syndromebits1[1,x]==H1[1,9] and syndromebits1[2,x]==H1[2,9] and syndromebits1[3,x]==H1[3,0]):
+            biterror1[9,x]=1
+            
+        elif(syndromebits1[0,x]==H1[0,10] and syndromebits1[1,x]==H1[1,10] and syndromebits1[2,x]==H1[2,10] and syndromebits1[3,x]==H1[3,0]):
+            biterror1[10,x]=1
+            
+        elif(syndromebits1[0,x]==H1[0,11] and syndromebits1[1,x]==H1[1,11] and syndromebits1[2,x]==H1[2,11] and syndromebits1[3,x]==H1[3,0]):
+            biterror1[10,x]=1
+            
+        elif(syndromebits1[0,x]==H1[0,12] and syndromebits1[1,x]==H1[1,12] and syndromebits1[2,x]==H1[2,12] and syndromebits1[3,x]==H1[3,0]):
+            biterror1[12,x]=1
+            
+        elif(syndromebits1[0,x]==H1[0,13] and syndromebits1[1,x]==H1[1,13] and syndromebits1[2,x]==H1[2,13] and syndromebits1[3,x]==H1[3,0]):
+            biterror1[13,x]=1
+            
+        elif(syndromebits1[0,x]==H1[0,14] and syndromebits1[1,x]==H1[1,14] and syndromebits1[2,x]==H1[2,14] and syndromebits1[3,x]==H1[3,0]):
+            biterror1[14,x]=1
   
-            #print ("The new bit error:\n", biterror1)
-            
-            correctedbits1=(np.logical_xor(recievedbits1,biterror1)).astype(int)
-            numberoferrors1=np.sum(np.logical_xor(correctedbits1,codebits1))
-            BER1=numberoferrors1/N
-            y2=np.append(y2,BER1)
-            #print("The corrected bits are:\n", correctedbits1)
-            #print("The number of errors are:\n", numberoferrors1)
+        #print ("The new bit error:\n", biterror1)
+        
+        correctedbits1=(np.logical_xor(recievedbits1,biterror1)).astype(int)
+        numberoferrors1=np.sum(np.logical_xor(correctedbits1,codebits1))
+        BER1=numberoferrors1/N
+        y2=np.append(y2,BER1)
+        #print("The corrected bits are:\n", correctedbits1)
+        #print("The number of errors are:\n", numberoferrors1)
         
 toc=time.time()
 r=np.arange(-3.0, -0.29, 0.01)
