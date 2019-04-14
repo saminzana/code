@@ -13,7 +13,7 @@ tic=time.time()
 
 
 #N=1000032
-N=44
+N=440
 bits = np.random.randint(2, size=(4, (int(N/4)))).astype(int)
 
 phi=np.array([[0,1,1,1],[1,1,1,0],[1,1,0,1]]).astype(int)
@@ -69,10 +69,10 @@ for p in np.arange(-3.0, -0.29, 0.01):
             biterror[6,x]=1
        # print ("The new bit error:\n", biterror)
     
-        correctedbits=(np.logical_xor(recievedbits,biterror)).astype(int)
-        numberoferrors=np.sum(np.logical_xor(correctedbits,codebits))
-        BER=numberoferrors/N
-        y1=np.append(y1,BER)
+    correctedbits=(np.logical_xor(recievedbits,biterror)).astype(int)
+    numberoferrors=np.sum(np.logical_xor(correctedbits,codebits))
+    BER=numberoferrors/N
+    y1=np.append(y1,BER)
         #print("The corrected bits are:\n", correctedbits)
        # print("The number of errors are:\n", numberoferrors)
 
@@ -159,10 +159,10 @@ for p in np.arange(-3.0, -0.29, 0.01):
   
         #print ("The new bit error:\n", biterror1)
         
-        correctedbits1=(np.logical_xor(recievedbits1,biterror1)).astype(int)
-        numberoferrors1=np.sum(np.logical_xor(correctedbits1,codebits1))
-        BER1=numberoferrors1/N
-        y2=np.append(y2,BER1)
+    correctedbits1=(np.logical_xor(recievedbits1,biterror1)).astype(int)
+    numberoferrors1=np.sum(np.logical_xor(correctedbits1,codebits1))
+    BER1=numberoferrors1/N
+    y2=np.append(y2,BER1)
         #print("The corrected bits are:\n", correctedbits1)
         #print("The number of errors are:\n", numberoferrors1)
         
@@ -172,8 +172,8 @@ y1=np.log10(y1)
 y2=np.log10(y2)
 
 fig1, ax= plt.subplots()
-ax.plot(r,y1, label= "Error rate of r=3")
-ax.plot(r,y2, label= "Error rate of r=5")
+ax.plot(r,y1, label= "Error rate of (7,4) Hamming code")
+ax.plot(r,y2, label= "Error rate of (15,11) Hamming code")
 plt.xlabel("Transition Probability")
 plt.ylabel("log_10 (Error Rate)")
 ax.legend()
