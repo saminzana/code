@@ -35,38 +35,27 @@ for p in np.arange(-3.0, -0.29, 0.01):
         rxBits = np.logical_xor(txBits,flips)
         return rxBits
     H=np.hstack((phi, np.array([[1,0,0],[0,1,0],[0,0,1]]))).astype(int)
+    convert=np.array([1,2,4])
+    Hconvert=np.dot(convert,H)
     #print("This is H:\n", H)
     recievedbits=(bsc(codebits,10**p)).astype(int)
     #print("These are the recieved bits:\n", recievedbits)
     syndromebits=(np.dot(H,recievedbits)%2).astype(int)
+    syndromeconvert=np.dot(convert,syndromebits)
     #print ("The Syndrome Bits are:\n", syndromebits)
-    errorbits=(np.logical_xor(codebits,recievedbits)).astype(int)
+    #errorbits=(np.logical_xor(codebits,recievedbits)).astype(int)
     #print("The bits in error are:\n", errorbits)
     
     shape=(7,(int(N/4)))
     biterror= (np.zeros(shape)).astype(int)
     
-    for x in range (0,int(N/4)-1):
-        if(syndromebits[0,x]==H[0,0] and syndromebits[1,x]==H[1,0] and syndromebits[2,x]==H[2,0]):
-            biterror[0,x]=1
-        
-        elif(syndromebits[0,x]==H[0,1] and syndromebits[1,x]==H[1,1] and syndromebits[2,x]==H[2,1]):
-            biterror[1,x]=1
-            
-        elif(syndromebits[0,x]==H[0,2] and syndromebits[1,x]==H[1,2] and syndromebits[2,x]==H[2,2]):
-            biterror[2,x]=1
-            
-        elif(syndromebits[0,x]==H[0,3] and syndromebits[1,x]==H[1,3] and syndromebits[2,x]==H[2,3]):
-            biterror[3,x]=1
-            
-        elif(syndromebits[0,x]==H[0,4] and syndromebits[1,x]==H[1,4] and syndromebits[2,x]==H[2,4]):
-            biterror[4,x]=1
-            
-        elif(syndromebits[0,x]==H[0,5] and syndromebits[1,x]==H[1,5] and syndromebits[2,x]==H[2,5]):
-            biterror[5,x]=1
-            
-        elif(syndromebits[0,x]==H[0,6] and syndromebits[1,x]==H[1,6] and syndromebits[2,x]==H[2,6]):
-            biterror[6,x]=1
+    for x1 in range (0,int(N/4)):
+        if (syndromeconvert[x1]!=0):
+            change=np.where(Hconvert==syndromeconvert[x1])[0][0]
+            #print("This is change:\n", change)
+            biterror[change, x1]=1
+        else:
+            biterror[change, x1]=0
        # print ("The new bit error:\n", biterror)
     
     correctedbits=(np.logical_xor(recievedbits,biterror)).astype(int)
@@ -102,10 +91,13 @@ for p in np.arange(-3.0, -0.29, 0.01):
         rxBits = np.logical_xor(txBits,flips)
         return rxBits
     H1=np.hstack((phi1, np.array([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]))).astype(int)
+    convert1=np.array([1,2,4,8])
+    Hconvert1=np.dot(convert1,H1)
     #print("This is H:\n", H1)
     recievedbits1=(bsc(codebits1,10**p)).astype(int)
     #print("These are the recieved bits:\n", recievedbits1)
     syndromebits1=(np.dot(H1,recievedbits1)%2).astype(int)
+    syndromeconvert1=np.dot(convert1,syndromebits1)
     #print ("The Syndrome Bits are:\n", syndromebits1)
     #errorbits=(np.logical_xor(codebits,recievedbits)).astype(int)
     #print("The bits in error are:\n", errorbits)
@@ -113,51 +105,13 @@ for p in np.arange(-3.0, -0.29, 0.01):
     shape1=(15,(int(N/11)))
     biterror1= (np.zeros(shape1)).astype(int)
 
-    for x in range (0,int(N/11)):
-        if(syndromebits1[0,x]==H1[0,0] and syndromebits1[1,x]==H1[1,0] and syndromebits1[2,x]==H1[2,0] and syndromebits1[3,x]==H1[3,0]):
-            biterror1[0,x]=1
-        
-        elif(syndromebits1[0,x]==H1[0,1] and syndromebits1[1,x]==H1[1,1] and syndromebits1[2,x]==H1[2,1] and syndromebits1[3,x]==H1[3,1]):
-            biterror1[1,x]=1
-            
-        elif(syndromebits1[0,x]==H1[0,2] and syndromebits1[1,x]==H1[1,2] and syndromebits1[2,x]==H1[2,2] and syndromebits1[3,x]==H1[3,2]):
-            biterror1[2,x]=1
-            
-        elif(syndromebits1[0,x]==H1[0,3] and syndromebits1[1,x]==H1[1,3] and syndromebits1[2,x]==H1[2,3] and syndromebits1[3,x]==H1[3,3]):
-            biterror1[3,x]=1
-            
-        elif(syndromebits1[0,x]==H1[0,4] and syndromebits1[1,x]==H1[1,4] and syndromebits1[2,x]==H1[2,4] and syndromebits1[3,x]==H1[3,4]):
-            biterror1[4,x]=1
-            
-        elif(syndromebits1[0,x]==H1[0,5] and syndromebits1[1,x]==H1[1,5] and syndromebits1[2,x]==H1[2,5] and syndromebits1[3,x]==H1[3,5]):
-            biterror1[5,x]=1
-            
-        elif(syndromebits1[0,x]==H1[0,6] and syndromebits1[1,x]==H1[1,6] and syndromebits1[2,x]==H1[2,6] and syndromebits1[3,x]==H1[3,6]):
-            biterror1[6,x]=1
-            
-        elif(syndromebits1[0,x]==H1[0,7] and syndromebits1[1,x]==H1[1,7] and syndromebits1[2,x]==H1[2,7] and syndromebits1[3,x]==H1[3,7]):
-            biterror1[7,x]=1
-            
-        elif(syndromebits1[0,x]==H1[0,8] and syndromebits1[1,x]==H1[1,8] and syndromebits1[2,x]==H1[2,8] and syndromebits1[3,x]==H1[3,8]):
-            biterror1[8,x]=1
-            
-        elif(syndromebits1[0,x]==H1[0,9] and syndromebits1[1,x]==H1[1,9] and syndromebits1[2,x]==H1[2,9] and syndromebits1[3,x]==H1[3,9]):
-            biterror1[9,x]=1
-            
-        elif(syndromebits1[0,x]==H1[0,10] and syndromebits1[1,x]==H1[1,10] and syndromebits1[2,x]==H1[2,10] and syndromebits1[3,x]==H1[3,10]):
-            biterror1[10,x]=1
-            
-        elif(syndromebits1[0,x]==H1[0,11] and syndromebits1[1,x]==H1[1,11] and syndromebits1[2,x]==H1[2,11] and syndromebits1[3,x]==H1[3,11]):
-            biterror1[11,x]=1
-            
-        elif(syndromebits1[0,x]==H1[0,12] and syndromebits1[1,x]==H1[1,12] and syndromebits1[2,x]==H1[2,12] and syndromebits1[3,x]==H1[3,12]):
-            biterror1[12,x]=1
-            
-        elif(syndromebits1[0,x]==H1[0,13] and syndromebits1[1,x]==H1[1,13] and syndromebits1[2,x]==H1[2,13] and syndromebits1[3,x]==H1[3,13]):
-            biterror1[13,x]=1
-            
-        elif(syndromebits1[0,x]==H1[0,14] and syndromebits1[1,x]==H1[1,14] and syndromebits1[2,x]==H1[2,14] and syndromebits1[3,x]==H1[3,14]):
-            biterror1[14,x]=1
+    for x2 in range (0,int(N/11)):
+        if (syndromeconvert1[x2]!=0):
+            change1=np.where(Hconvert1==syndromeconvert1[x2])[0][0]
+            #print("This is change:\n", change)
+            biterror1[change1, x2]=1
+        else:
+            biterror1[change1, x2]=0
         #print ("The new bit error:\n", biterror1)
 
     correctedbits1=(np.logical_xor(recievedbits1,biterror1)).astype(int)
