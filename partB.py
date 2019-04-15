@@ -1,18 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Apr 12 10:55:01 2019
-
 @author: SAMESUNG
 """
 import numpy as np
 import matplotlib.pyplot as plt
-import itertools
-from scipy import stats
 import time
 tic=time.time()
 
 
-#N=1000032
 N=1000032
 bits = np.random.randint(2, size=(4, (int(N/4)))).astype(int)
 
@@ -59,7 +55,8 @@ for p in np.arange(-3.0, -0.29, 0.01):
        # print ("The new bit error:\n", biterror)
     
     correctedbits=(np.logical_xor(recievedbits,biterror)).astype(int)
-    numberoferrors=np.sum(np.logical_xor(correctedbits,codebits))
+    newcorrectedbits=np.delete(correctedbits, [4,5,6], 0)
+    numberoferrors=np.sum(np.logical_xor(newcorrectedbits,bits))
     BER=numberoferrors/N
     y1=np.append(y1,BER)
         #print("The corrected bits are:\n", correctedbits)
@@ -115,7 +112,8 @@ for p in np.arange(-3.0, -0.29, 0.01):
         #print ("The new bit error:\n", biterror1)
 
     correctedbits1=(np.logical_xor(recievedbits1,biterror1)).astype(int)
-    numberoferrors1=np.sum(np.logical_xor(correctedbits1,codebits1))
+    newcorrectedbits1=np.delete(correctedbits1,[14,13,12,11],0)
+    numberoferrors1=np.sum(np.logical_xor(newcorrectedbits1,bits1))
     BER1=numberoferrors1/N
     y2=np.append(y2,BER1)
     #print("The corrected bits are:\n", correctedbits1)
